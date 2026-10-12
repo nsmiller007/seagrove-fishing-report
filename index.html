@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seagrove Beach Fishing Report • 30A</title>
+
+  <!-- Leaflet for interactive map -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Playfair+Display:wght@700&amp;display=swap');
+
+    :root {
+      --bg: #0a111f;
+      --card: #111a2b;
+      --card-hover: #152033;
+      --accent: #14b8a6;
+      --accent-dark: #0f766e;
+      --text: #e2e8f0;
+      --text-muted: #94a3b8;
+      --border: #1e2a44;
+      --success: #22c55e;
+      --warning: #eab308;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', system_ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .header {
+      background: linear-gradient(180deg, #0f172a 0%, #0a111f 100%);
+      padding: 1.75rem 1rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-content {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .header-left h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 2rem;
+      color: #f1f5f9;
+      letter-spacing: -0.02em;
+    }
+
+    .header-left .subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-top: 2px;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 0.6rem;
+      align-items: center;
+    }
+
+    .location-pill {
+      background: rgba(20, 184, 166, 0.1);
+      color: #5eead4;
+      padding: 5px 13px;
+      border-radius: 9999px;
+      font-size: 0.82rem;
+      white-space: nowrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 9999px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      background: #0f766e;
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: var(--card);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: var(--card-hover);
+      border-color: #334155;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    .section {
+      margin-top: 2rem;
+    }
+
+    .section-title {
+      font-size: 1.25rem;
+      color: #f1f5f9;
+      margin-bottom: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.25rem;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.15);
+      border-color: #334155;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0.85rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .summary-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1rem 1.15rem;
+    }
+
+    .summary-card .label {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      font-weight: 600;
+    }
+
+    .summary-card .value {
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: #f1f5f9;
+      margin-top: 2px;
+      line-height: 1.1;
+    }
+
+    .forecast-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--card);
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .forecast-table th {
+      background: #0f172a;
+      color: #64748b;
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-align: left;
+      padding: 12px 14px;
+      white-space: nowrap;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .forecast-table td {
+      padding: 13px 14px;
+      border-top: 1px solid var(--border);
+      font-size: 0.92rem;
+      vertical-align: top;
+    }
+
+    .forecast-table tr:hover {
+      background: var(--card-hover);
+    }
+
+    .day-name {
+      font-weight: 600;
+      color: #e0f2fe;
+    }
+
+    .best-time {
+      background: #0d9488;
+      color: white;
+      font-size: 0.8rem;
+      padding: 2px 8px;
+      border-radius: 6px;
+      display: inline-block;
+      font-weight: 600;
+    }
+
+    .surf-badge {
+      font-size: 0.8rem;
+      padding: 1px 8px;
+      border-radius: 9999px;
+      background: #1e3a5f;
+      color: #94a3b8;
+    }
+
+    .species-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1rem;
+    }
+
+    .species-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.15rem;
+    }
+
+    .species-card h3 {
+      color: #5eead4;
+      margin-bottom: 0.5rem;
+      font-size: 1.15rem;
+    }
+
+    .lure-list {
+      margin-top: 0.6rem;
+    }
+
+    .lure-list li {
+      margin-bottom: 4px;
+      padding-left: 4px;
+    }
+
+    .shop-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+
+    .shop {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.1rem 1.2rem;
+    }
+
+    .shop-name {
+      font-weight: 700;
+      color: #5eead4;
+      font-size: 1.05rem;
+    }
+
+    .shop-detail {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    .resource-links a {
+      display: block;
+      color: #67e8f9;
+      text-decoration: none;
+      padding: 6px 0;
+      border-bottom: 1px solid #1e3a5f;
+    }
+
+    .resource-links a:hover {
+      color: #5eead4;
+    }
+
+    .highlight {
+      background: #0d9488;
+      color: white;
+      padding: 2px 7px;
+      border-radius: 5px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .footer {
+      margin-top: 3rem;
+      padding: 1.5rem 0;
+      font-size: 0.8rem;
+      color: #475569;
+      text-align: center;
+      border-top: 1px solid #1e3a5f;
+    }
+
+    .badge {
+      font-size: 0.75rem;
+      padding: 2px 9px;
+      border-radius: 9999px;
+      font-weight: 600;
+    }
+
+    .badge-green { background: #166534; color: #86efac; }
+    .badge-yellow { background: #854d0e; color: #fde047; }
+    .badge-red { background: #7f1d1d; color: #fca5a5; }
+
+    table .conditions {
+      font-size: 0.9rem;
+    }
+
+    /* Map & Spots Styles */
+    #fishing-map {
+      height: 420px;
+      border-radius: 16px;
+      border: 1px solid #1e3a5f;
+      margin-bottom: 1rem;
+      background: #0a1929;
+    }
+
+    .spot-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 0.95rem 1.05rem;
+    }
+
+    .spot-card h4 {
+      color: #5eead4;
+      margin-bottom: 0.25rem;
+      font-size: 1rem;
+    }
+
+    .spot-card p {
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .spot-type {
+      font-size: 0.7rem;
+      padding: 1px 7px;
+      border-radius: 9999px;
+      background: #1e3a5f;
+      color: #64748b;
+      display: inline-block;
+    }
+
+    .camera-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 0.85rem;
+    }
+
+    .camera-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 0.9rem 1.05rem;
+    }
+
+    .camera-card a {
+      color: #67e8f9;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .camera-card a:hover {
+      color: #5eead4;
+    }
+
+    .leaflet-popup-content-wrapper {
+      background: var(--card);
+      color: var(--text);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    .leaflet-popup-tip {
+      background: var(--card);
+    }
+
+    /* Modern Dashboard Modal */
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 1rem;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 980px;
+      max-height: 92vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.5);
+    }
+
+    .modal.fullscreen .modal-content {
+      max-width: 100vw;
+      max-height: 100vh;
+      border-radius: 0;
+      height: 100vh;
+    }
+
+    .modal-header {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #0a111f;
+    }
+
+    .modal-header h2 {
+      font-size: 1.35rem;
+      color: #f1f5f9;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .modal-body {
+      padding: 1.5rem;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+
+    .dash-card {
+      background: #0a111f;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.1rem 1.25rem;
+    }
+
+    .dash-card .dash-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 4px;
+    }
+
+    .dash-card .dash-value {
+      font-size: 1.65rem;
+      font-weight: 700;
+      line-height: 1.05;
+    }
+
+    .close-btn, .icon-btn {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      width: 38px;
+      height: 38px;
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: all 0.2s ease;
+    }
+
+    .close-btn:hover, .icon-btn:hover {
+      background: var(--card-hover);
+      color: var(--text);
+    }
+
+    .quick-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 1rem;
+    }
+
+    .quick-btn {
+      flex: 1;
+      min-width: 140px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 12px 16px;
+      border-radius: 12px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .quick-btn:hover {
+      background: var(--accent-dark);
+      color: white;
+      border-color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <div class="header-left">
+        <h1>Seagrove Beach Fishing</h1>
+        <div class="subtitle">30A • Santa Rosa Beach, Florida</div>
+      </div>
+      <div class="header-actions">
+        <div class="location-pill">📍 Seagrove / 30A</div>
+        <button onclick="openDashboard()" class="btn">
+          📊 Today's Dashboard
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <!-- Quick Summary -->
+    <div class="section">
+      <div class="summary-grid">
+        <div class="summary-card">
+          <div class="label">Current Window</div>
+          <div class="value">Today – Next Friday</div>
+          <div style="font-size:0.85rem; color:#64748b; margin-top:4px;">Early June 2026</div>
+        </div>
+        <div class="summary-card">
+          <div class="label">Water Temp</div>
+          <div class="value">~80–82°F</div>
+          <div style="font-size:0.85rem; color:#64748b;">Gulf of Mexico</div>
+        </div>
+        <div class="summary-card">
+          <div class="label">Best Bite Outlook</div>
+          <div class="value" style="color:#67e8f9;">Good to Very Good</div>
+          <div style="font-size:0.85rem; color:#64748b;">Near full moon period</div>
+        </div>
+        <div class="summary-card">
+          <div class="label">Primary Species</div>
+          <div class="value" style="font-size:1.15rem;">Redfish • Trout • Pompano</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7-Day Forecast -->
+    <div class="section">
+      <h2 class="section-title">7-Day Surf + Weather + Bite Forecast</h2>
+      
+      <table class="forecast-table">
+        <thead>
+          <tr>
+            <th>Day</th>
+            <th>Weather</th>
+            <th>Surf / Wind</th>
+            <th>Best Fishing Windows</th>
+            <th>Outlook</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="day-name">Today (Sun)</span><br><span style="font-size:0.8rem;color:#64748b;">Jun 1</span></td>
+            <td class="conditions">86° / 76°<br>Partly sunny, 20% PM storms<br>SW 10-15 mph</td>
+            <td>1-2 ft wind chop<br>Short period, poor-fair<br>SW onshore</td>
+            <td>
+              <span class="best-time">Major: 11:50am–1:50pm</span><br>
+              <span style="font-size:0.85rem">Minor: 4:30–6:30am &amp; 7:20–9:20pm</span>
+            </td>
+            <td><span class="badge badge-green">Good</span><br><span style="font-size:0.8rem">Full moon influence</span></td>
+          </tr>
+          <tr>
+            <td><span class="day-name">Mon</span><br><span style="font-size:0.8rem;color:#64748b;">Jun 2</span></td>
+            <td class="conditions">86° / 75°<br>Scattered storms likely (40%)<br>W/SW 10-15</td>
+            <td>1-2 ft chop<br>Still small, bumpy<br>Sea breeze</td>
+            <td>
+              <span class="best-time">Major: 12:45–2:45pm</span><br>
+              <span style="font-size:0.85rem">Minor: 5:20–7:20am &amp; 8:15–10:15pm</span>
+            </td>
+            <td><span class="badge badge-yellow">Fair-Good</span><br><span style="font-size:0.8rem">Afternoon storms</span></td>
+          </tr>
+          <tr>
+            <td><span class="day-name">Tue</span><br><span style="font-size:0.8rem;color:#64748b;">Jun 3</span></td>
+            <td class="conditions">86° / 74°<br>Scattered storms (40%)<br>WNW shifting</td>
+            <td>1-2 ft<br>Improving shape possible<br>before afternoon wind</td>
+            <td>
+              <span class="best-time">Major: 1:35–3:35pm</span><br>
+              <span style="font-size:0.85rem">Minor: 6:10–8:10am &amp; 9:00–11:00pm</span>
+            </td>
+            <td><span class="badge badge-yellow">Fair-Good</span></td>
+          </tr>
+          <tr>
+            <td><span class="day-name">Wed</span><br><span style="font-size:0.8rem;color:#64748b;">Jun 4</span></td>
+            <td class="conditions">84° / 71°<br>Mostly sunny, drier<br>10-20% chance</td>
+            <td>2-3 ft possible<br>E/NE winds building<br>Better structure</td>
+            <td>
+              <span class="best-time">Major: 2:25–4:25pm</span><br>
+              <span style="font-size:0.85rem">Minor: 7:05–9:05am &amp; 9:45–11:45pm</span>
+            </td>
+            <td><span class="badge badge-green">Good</span><br><span style="font-size:0.8rem">Drier = better</span></td>
+          </tr>
+          <tr>
+            <td><span class="day-name">Thu</span><br><span style="font-size:0.8rem;color:#64748b;">Jun 5</span></td>
+            <td class="conditions">83° / 72°<br>Mostly sunny<br>Low storm chance</td>
+            <td>2-4 ft (best of week)<br>E/SE 10-18 kt<br>Watch for cleaner faces</td>
+            <td>
+              <span class="best-time">Major: 3:10–5:10pm</span><br>
+              <span style="font-size:0.85rem">Minor: 8:00–10:00am &amp; 10:20pm–12:20am</span>
+            </td>
+            <td><span class="badge badge-green">Best Day</span></td>
+          </tr>
+          <tr>
+            <td><span class="day-name">Fri</span><br><span style="font-size:0.8rem;color:#64748b;">Jun 6</span></td>
+            <td class="conditions">83° / 73°<br>Partly cloudy<br>20-30% storms</td>
+            <td>2-3 ft<br>SE winds<br>Still fishable</td>
+            <td>
+              <span class="best-time">Major: 3:55–5:55pm</span><br>
+              <span style="font-size:0.85rem">Minor: 9:00–11:00am &amp; 10:55pm–12:55am</span>
+            </td>
+            <td><span class="badge badge-yellow">Good</span></td>
+          </tr>
+          <tr>
+            <td><span class="day-name">Next Sat</span><br><span style="font-size:0.8rem;color:#64748b;">Jun 7</span></td>
+            <td class="conditions">84° / 74°<br>Increasing storms<br>30-50%</td>
+            <td>2-3 ft<br>SE/S winds<br>Choppy later</td>
+            <td>
+              <span class="best-time">Major: ~4:40–6:40pm</span><br>
+              <span style="font-size:0.85rem">Minor: 9:50–11:50am &amp; late night</span>
+            </td>
+            <td><span class="badge badge-yellow">Fair</span></td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <div style="margin-top:0.75rem; font-size:0.8rem; color:#64748b;">
+        Surf data synthesized from Surfline (Grayton/Inlet Beach) + NOAA marine forecasts. Conditions change fast — always check live reports.
+      </div>
+    </div>
+
+    <!-- Top Windows -->
+    <div class="section">
+      <h2 class="section-title">This Week’s Best Fishing Windows</h2>
+      <div class="card">
+        <p><strong>Top recommendations (combine these with moving tides):</strong></p>
+        <ul style="margin-top:0.6rem; padding-left:1.1rem; color:#cbd5e1;">
+          <li><strong>Wednesday–Thursday</strong> — Best overall window (drier air, building surf, good structure)</li>
+          <li><strong>Early mornings</strong> (first 2–3 hours after sunrise) — especially Tue–Fri</li>
+          <li><strong>Late afternoon majors</strong> (2–6pm range) — overlap with incoming/outgoing tides</li>
+          <li><strong>Full moon influence</strong> (through early week) — stronger nighttime and twilight feeding</li>
+        </ul>
+        <p style="margin-top:0.8rem; font-size:0.9rem;">Focus on <strong>moving water</strong> (2 hours on either side of high or low) + low light periods for redfish and trout.</p>
+      </div>
+    </div>
+
+    <!-- Interactive Map -->
+    <div class="section">
+      <h2 class="section-title">📍 Interactive Map — Shops &amp; Fishing Spots</h2>
+      <div id="fishing-map"></div>
+      <p style="font-size:0.8rem; color:#64748b; margin-top:0.25rem;">
+        Click markers for details. <strong>Teal</strong> = bait shops • <strong>Blue</strong> = fishing spots. Coordinates are approximate.
+      </p>
+    </div>
+
+    <!-- Popular Fishing Spots -->
+    <div class="section">
+      <h2 class="section-title">🎣 Popular Fishing Spots on 30A</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 0.85rem;">
+
+        <div class="spot-card">
+          <span class="spot-type">Inshore / Bayou</span>
+          <h4>Hogtown Bayou</h4>
+          <p>One of the best inshore spots near 30A. Grass flats, oyster bars, and points. Excellent for redfish and trout from kayak or shore at Cessna Landing.</p>
+        </div>
+
+        <div class="spot-card">
+          <span class="spot-type">Coastal Dune Lake</span>
+          <h4>Western Lake (Grayton)</h4>
+          <p>Unique brackish lake with bass, bream, and occasional reds/trout near the outfall. Great kayak access from Grayton Beach State Park.</p>
+        </div>
+
+        <div class="spot-card">
+          <span class="spot-type">Surf</span>
+          <h4>Seagrove Beach</h4>
+          <p>Classic Gulf surf fishing. Target pompano, whiting, and occasional redfish in the troughs and near sandbars. Multiple public accesses.</p>
+        </div>
+
+        <div class="spot-card">
+          <span class="spot-type">Surf + Lake</span>
+          <h4>Grayton Beach</h4>
+          <p>Combination of surf fishing and Western Lake outfall. Good mix of species and very scenic. State park access.</p>
+        </div>
+
+        <div class="spot-card">
+          <span class="spot-type">Surf</span>
+          <h4>Inlet Beach</h4>
+          <p>Less crowded surf option on the east end of 30A. Solid pompano and whiting action, especially near the state park area.</p>
+        </div>
+
+        <div class="spot-card">
+          <span class="spot-type">Inshore</span>
+          <h4>Eastern Lake Outflow</h4>
+          <p>Another productive coastal dune lake. Fish the connection to the Gulf for reds, trout, and flounder on moving tides.</p>
+        </div>
+
+        <div class="spot-card">
+          <span class="spot-type">Bay Flats</span>
+          <h4>Choctawhatchee Bay (331 Area)</h4>
+          <p>Big grass flats and structure north of 30A. Great for sight fishing reds and trout from kayak. Launch from Bay Baits area or public ramps.</p>
+        </div>
+
+        <div class="spot-card">
+          <span class="spot-type">Surf</span>
+          <h4>Topsail Hill Preserve</h4>
+          <p>More remote and less pressured beach access. Good for surf fishing with fewer crowds. Long walk to the water in some areas.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live Cameras -->
+    <div class="section">
+      <h2 class="section-title">📹 Live Beach &amp; Surf Cameras</h2>
+      <div class="camera-grid">
+
+        <div class="camera-card">
+          <strong>30A Watchtower</strong><br>
+          <span style="font-size:0.8rem; color:#94a3b8;">Best overall dashboard</span><br>
+          <a href="https://30awatchtower.com/" target="_blank">→ Open Live Dashboard</a>
+          <div style="font-size:0.75rem; margin-top:4px; color:#64748b;">Grayton, Seagrove, Inlet + weather &amp; flags</div>
+        </div>
+
+        <div class="camera-card">
+          <strong>SoWal.com Live Webcams</strong><br>
+          <span style="font-size:0.8rem; color:#94a3b8;">Multiple 30A angles</span><br>
+          <a href="https://sowal.com/live-webcams" target="_blank">→ View All Cameras</a>
+          <div style="font-size:0.75rem; margin-top:4px; color:#64748b;">Grayton Beachcam, Seagrove SkyCam, Inlet Beach, more</div>
+        </div>
+
+        <div class="camera-card">
+          <strong>Grayton Beachcam</strong><br>
+          <a href="https://sowal.com/webcam/grayton-beachcam" target="_blank">→ Watch Grayton Live</a>
+          <div style="font-size:0.75rem; margin-top:4px; color:#64748b;">Great view of beach + Western Lake outfall</div>
+        </div>
+
+        <div class="camera-card">
+          <strong>Seagrove Beach SkyCam</strong><br>
+          <a href="https://sowal.com/webcam/seagrove-beach-skycam" target="_blank">→ Watch Seagrove Live</a>
+          <div style="font-size:0.75rem; margin-top:4px; color:#64748b;">Direct overhead view of Seagrove Beach</div>
+        </div>
+
+        <div class="camera-card">
+          <strong>Inlet Beach Cam</strong><br>
+          <a href="https://sowal.com/webcam/inlet-beachcam" target="_blank">→ Watch Inlet Beach Live</a>
+          <div style="font-size:0.75rem; margin-top:4px; color:#64748b;">East end of 30A near Camp Helen</div>
+        </div>
+
+        <div class="camera-card">
+          <strong>Surf30A.com</strong><br>
+          <span style="font-size:0.8rem; color:#94a3b8;">Local surf report + cams</span><br>
+          <a href="https://surf30a.com/" target="_blank">→ Visit Surf30A</a>
+          <div style="font-size:0.75rem; margin-top:4px; color:#64748b;">Seagrove-focused with multiple live views</div>
+        </div>
+
+      </div>
+      <p style="font-size:0.8rem; color:#64748b; margin-top:0.5rem;">
+        Pro tip: Check these before you go — especially wind direction and crowd levels.
+      </p>
+    </div>
+
+    <!-- Species & Tips -->
+    <div class="section">
+      <h2 class="section-title">Target Species &amp; Proven Tactics</h2>
+      
+      <div class="species-grid">
+        
+        <!-- Redfish -->
+        <div class="species-card">
+          <h3>🐟 Redfish (Red Drum)</h3>
+          <p style="font-size:0.92rem; color:#94a3b8;">Best in Choctawhatchee Bay grass flats, oyster bars, Hogtown Bayou, creek mouths, and dock lines. Sight fishing excellent on calm days.</p>
+          
+          <div class="lure-list">
+            <strong style="font-size:0.9rem;">Top Lures &amp; Rigs:</strong>
+            <ul style="font-size:0.9rem; margin-top:4px; color:#cbd5e1;">
+              <li><strong>Gold Weedless Spoon</strong> (¼ oz Johnson Silver Minnow) — #1 local choice. Slow retrieve over grass &amp; oysters.</li>
+              <li><strong>Gulp! Shrimp or Swimming Mullet</strong> (3–5") on ⅛–¼ oz jighead — pearl, chartreuse, root beer.</li>
+              <li><strong>Topwater</strong> (Zara Spook, walking baits) at dawn/dusk or overcast.</li>
+              <li><strong>Chatterbait / Skimmer Jig</strong> in stained water or around structure.</li>
+            </ul>
+          </div>
+          <p style="margin-top:0.5rem; font-size:0.85rem;">
+            <strong>Pro tip:</strong> Troll a gold spoon behind a kayak while exploring flats — locals say it’s almost unfair.
+          </p>
+          <a href="https://www.floridasportsman.com/editorial/10-best-redfish-baits-lures-right-now/400747" target="_blank" style="color:#67e8f9; font-size:0.85rem;">→ More redfish lure advice (Florida Sportsman)</a>
+        </div>
+
+        <!-- Speckled Trout -->
+        <div class="species-card">
+          <h3>🐟 Speckled Seatrout</h3>
+          <p style="font-size:0.92rem; color:#94a3b8;">Grass flats, sandy potholes, deeper edges (4–7 ft), and creek mouths. Very consistent right now.</p>
+          <div class="lure-list">
+            <strong style="font-size:0.9rem;">Best Tactics:</strong>
+            <ul style="font-size:0.9rem; margin-top:4px; color:#cbd5e1;">
+              <li>Topwater at first light on higher tides</li>
+              <li>Gulp shrimp or 3–4" paddle tails under popping cork</li>
+              <li>Live shrimp or pinfish on light jighead</li>
+              <li>CAL jigs or similar in pearl/chartreuse</li>
+            </ul>
+          </div>
+          <p style="margin-top:0.4rem; font-size:0.85rem;">Target deeper grass edges once boat traffic and sun get high.</p>
+        </div>
+
+        <!-- Pompano -->
+        <div class="species-card">
+          <h3>🐟 Pompano (Surf)</h3>
+          <p style="font-size:0.92rem; color:#94a3b8;">Seagrove Beach and nearby 30A surf. Good reports in late spring/early summer when weeds aren’t thick.</p>
+          <div class="lure-list">
+            <strong style="font-size:0.9rem;">Surf Rigs:</strong>
+            <ul style="font-size:0.9rem; margin-top:4px; color:#cbd5e1;">
+              <li>Double-drop pompano rig with pink/white/orange beads</li>
+              <li>Fresh or frozen shrimp, sand fleas (coquinas), Fishbites</li>
+              <li>Small jigs or pompano spoons in troughs between bars</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Local Shops -->
+    <div class="section">
+      <h2 class="section-title">Local Bait &amp; Tackle Shops</h2>
+      <div class="shop-grid">
+        
+        <div class="shop">
+          <div class="shop-name">Yellowfin Ocean Sports</div>
+          <div class="shop-detail">
+            <strong>Closest to Seagrove Beach</strong><br>
+            30 Herons Watch Way, Santa Rosa Beach<br>
+            📞 <a href="tel:8502319024" style="color:#67e8f9;">(850) 231-9024</a><br>
+            Also WaterColor &amp; Grayton locations<br>
+            Surf gear, frozen bait, rentals, great local advice
+          </div>
+          <a href="https://www.yellowfinoceansports.com/" target="_blank" style="font-size:0.85rem; color:#67e8f9;">yellowfinoceansports.com</a>
+        </div>
+
+        <div class="shop">
+          <div class="shop-name">Bay Baits</div>
+          <div class="shop-detail">
+            <strong>Best for live bait + bay/inshore</strong><br>
+            24295 US Hwy 331 S, Unit B, Santa Rosa Beach<br>
+            📞 <a href="tel:8502786292" style="color:#67e8f9;">(850) 278-6292</a><br>
+            Open 6 AM – 6 PM daily<br>
+            Live shrimp, expert local knowledge, kayak rentals
+          </div>
+          <a href="https://www.baybaits.com/" target="_blank" style="font-size:0.85rem; color:#67e8f9;">baybaits.com</a>
+        </div>
+
+        <div class="shop">
+          <div class="shop-name">Stinky’s Bait Shack</div>
+          <div class="shop-detail">
+            <strong>Fun 30A vibe + live bait</strong><br>
+            5994 W County Hwy 30A, Santa Rosa Beach (Dune Allen)<br>
+            📞 <a href="tel:8506222248" style="color:#67e8f9;">(850) 622-BAIT</a><br>
+            Live bait, gear, food &amp; bar next door<br>
+            Great for western/central 30A
+          </div>
+          <a href="https://stinkysbaitshop.com/" target="_blank" style="font-size:0.85rem; color:#67e8f9;">stinkysbaitshop.com</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resources -->
+    <div class="section">
+      <h2 class="section-title">Live Resources &amp; Regulations</h2>
+      <div class="card resource-links">
+        <a href="https://www.surfline.com/surf-report/grayton-beach/5842041f4e65fad6a7708aed" target="_blank">→ Surfline – Grayton Beach (closest detailed report)</a>
+        <a href="https://tides4fishing.com/us/florida-west-coast/fishing-bend-santa-rosa-sound" target="_blank">→ Tides4Fishing – Santa Rosa Sound (tides + solunar calendar)</a>
+        <a href="https://www.fishingreminder.com/fishing-spots/us/florida/seagrove-beach-4172351" target="_blank">→ FishingReminder – Seagrove Beach specific bite times</a>
+        <a href="https://myfwc.com/fishing/saltwater/recreational/red-drum/" target="_blank">→ FWC Redfish Regulations (Panhandle slot: 18–27", 1 per person)</a>
+        <a href="https://myfwc.com/fishing/saltwater/recreational/" target="_blank">→ Florida Saltwater Recreational Fishing Regulations</a>
+        <a href="https://forecast.weather.gov/zipcity.php?inputstring=Seagrove+Beach,FL" target="_blank">→ National Weather Service – Seagrove Beach forecast</a>
+      </div>
+    </div>
+
+    <div style="font-size:0.82rem; color:#64748b; background:#0a111f; padding:1rem 1.15rem; border-radius:14px; border-left:4px solid #14b8a6; line-height:1.5;">
+      <strong>Important:</strong> Always verify current tides, surf, and weather before heading out. Get a Florida fishing license (available at all local shops). Follow FWC slot limits for redfish (18–27"). Summer heat is serious — fish early or late and stay hydrated. Data compiled from Surfline, NOAA, local reports, and FishingReminder.
+    </div>
+
+  </div>
+
+  <!-- Dashboard Modal -->
+  <div id="dashboard-modal" class="modal" onclick="if (event.target.id === 'dashboard-modal') closeDashboard()">
+    <div class="modal-content" onclick="event.stopImmediatePropagation()">
+      <div class="modal-header">
+        <h2>📊 Today's Dashboard — Seagrove / 30A</h2>
+        <div class="modal-actions">
+          <button onclick="toggleFullscreen()" class="icon-btn" title="Toggle Fullscreen">⛶</button>
+          <button onclick="closeDashboard()" class="close-btn" title="Close">✕</button>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <!-- Big Snapshot -->
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(170px,1fr)); gap:0.85rem; margin-bottom:1.25rem;">
+          <div class="dash-card">
+            <div class="dash-label">Today</div>
+            <div class="dash-value" style="font-size:1.9rem;">86° / 76°</div>
+            <div style="color:#64748b; font-size:0.85rem;">Partly sunny • 20% PM storms</div>
+          </div>
+          <div class="dash-card">
+            <div class="dash-label">Surf</div>
+            <div class="dash-value">1–2 ft</div>
+            <div style="color:#64748b; font-size:0.85rem;">Short period wind chop • SW onshore</div>
+          </div>
+          <div class="dash-card">
+            <div class="dash-label">Best Bite Window</div>
+            <div class="dash-value" style="color:#14b8a6;">11:50am – 1:50pm</div>
+            <div style="color:#64748b; font-size:0.85rem;">Major period + moving tide</div>
+          </div>
+          <div class="dash-card">
+            <div class="dash-label">Recommendation</div>
+            <div class="dash-value" style="font-size:1.35rem; line-height:1.2;">Fish Hogtown Bayou<br>or Western Lake</div>
+            <div style="color:#22c55e; font-size:0.85rem; margin-top:4px;">Good conditions expected</div>
+          </div>
+        </div>
+
+        <div style="margin-bottom:1.25rem;">
+          <div style="font-size:0.8rem; color:#64748b; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px;">Quick Actions</div>
+          <div class="quick-actions">
+            <div onclick="closeDashboard(); document.getElementById('fishing-map').scrollIntoView({behavior:'smooth'})" class="quick-btn">🗺️ Open Map</div>
+            <div onclick="closeDashboard(); document.querySelector('.camera-grid').scrollIntoView({behavior:'smooth'})" class="quick-btn">📹 Live Cameras</div>
+            <div onclick="closeDashboard(); document.querySelectorAll('.shop-grid')[0]?.scrollIntoView({behavior:'smooth'})" class="quick-btn">🛒 Bait Shops</div>
+            <div onclick="window.open('https://30awatchtower.com/', '_blank')" class="quick-btn">🌊 30A Watchtower</div>
+          </div>
+        </div>
+
+        <div style="font-size:0.85rem; color:#64748b; background:#0a111f; padding:0.9rem 1.1rem; border-radius:12px; border-left:4px solid #14b8a6;">
+          <strong>Pro tip for today:</strong> Focus on the late morning major. Wind is manageable early. Western Lake or Hogtown Bayou should be more protected than the open Gulf surf.
+        </div>
+
+        <!-- Best Day This Week -->
+        <div style="margin-top:1.4rem;">
+          <div style="font-size:0.78rem; color:#64748b; margin-bottom:8px; text-transform:uppercase; letter-spacing:0.5px; font-weight:600;">⭐ Best Day to Fish This Week</div>
+          <div class="dash-card" style="background:#0a111f; border-color:#14b8a6;">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+              <div>
+                <div style="font-size:1.35rem; font-weight:700; color:#f1f5f9;">Thursday, June 5</div>
+                <div style="color:#64748b; font-size:0.9rem;">2–4 ft surf • Lower storm chance • E/SE winds</div>
+              </div>
+              <div style="text-align:right;">
+                <div style="background:#166534; color:#86efac; font-size:0.75rem; padding:3px 10px; border-radius:9999px; display:inline-block; font-weight:600;">BEST OVERALL</div>
+                <div style="font-size:0.85rem; color:#22c55e; margin-top:4px;">Strong afternoon major + cleaner faces</div>
+              </div>
+            </div>
+            <div style="margin-top:10px; font-size:0.85rem; color:#cbd5e1;">
+              Best combo of conditions: Drier air, building surf for structure fishing, and a solid 3:10–5:10pm major period. Great day for both surf (pompano) and inshore (reds/trout).
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Fishing Reports -->
+        <div style="margin-top:1.25rem;">
+          <div style="font-size:0.78rem; color:#64748b; margin-bottom:8px; text-transform:uppercase; letter-spacing:0.5px; font-weight:600;">📣 Recent Local Reports (Emerald Coast / 30A)</div>
+          <div style="display:grid; gap:0.6rem;">
+            <div style="background:#0a111f; border:1px solid var(--border); border-radius:10px; padding:0.7rem 0.9rem; font-size:0.88rem;">
+              <strong style="color:#5eead4;">Inshore / Hogtown Bayou:</strong> Redfish biting well on gold spoons and Gulp shrimp along grass edges and oyster bars. Early morning and moving tides best. Some solid slot reds reported.
+            </div>
+            <div style="background:#0a111f; border:1px solid var(--border); border-radius:10px; padding:0.7rem 0.9rem; font-size:0.88rem;">
+              <strong style="color:#5eead4;">Speckled Trout:</strong> Good early topwater action on the flats before boat traffic builds. Live shrimp under popping corks also producing in 4–7 ft depths.
+            </div>
+            <div style="background:#0a111f; border:1px solid var(--border); border-radius:10px; padding:0.7rem 0.9rem; font-size:0.88rem;">
+              <strong style="color:#5eead4;">Surf (Seagrove / Grayton):</strong> Pompano and whiting starting to show in the troughs near sandbars. Best when weeds clear. Sand fleas and fresh shrimp working.
+            </div>
+            <div style="background:#0a111f; border:1px solid var(--border); border-radius:10px; padding:0.7rem 0.9rem; font-size:0.88rem;">
+              <strong style="color:#5eead4;">General Note:</strong> Full moon influence still helping twilight and nighttime bites. Local shops (Yellowfin &amp; Bay Baits) reporting steady inshore action this week.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    Seagrove Beach / 30A Fishing Report • Built for local conditions<br>
+    Check live sources daily — conditions in the Gulf can change quickly.
+  </div>
+
+  <!-- Leaflet Map Initialization -->
+  <script>
+    // Initialize map centered on 30A / Seagrove area
+    const map = L.map('fishing-map').setView([30.325, -86.145], 11);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors',
+      maxZoom: 18,
+    }).addTo(map);
+
+    // Custom icons
+    const shopIcon = L.divIcon({
+      className: 'custom-div-icon',
+      html: `<div style="background:#0d9488; color:white; width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:2px solid white; box-shadow:0 2px 6px rgba(0,0,0,0.4); font-size:13px;">🛒</div>`,
+      iconSize: [22, 22],
+      iconAnchor: [11, 11],
+      popupAnchor: [0, -12]
+    });
+
+    const spotIcon = L.divIcon({
+      className: 'custom-div-icon',
+      html: `<div style="background:#3b82f6; color:white; width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:2px solid white; box-shadow:0 2px 6px rgba(0,0,0,0.4); font-size:11px;">🎣</div>`,
+      iconSize: [20, 20],
+      iconAnchor: [10, 10],
+      popupAnchor: [0, -11]
+    });
+
+    // Bait Shops
+    const shops = [
+      {
+        name: "Yellowfin Ocean Sports",
+        coords: [30.3245, -86.1345],
+        popup: `<strong>Yellowfin Ocean Sports</strong><br>30 Herons Watch Way<br>Santa Rosa Beach<br><a href="tel:8502319024">(850) 231-9024</a><br>Closest to Seagrove`
+      },
+      {
+        name: "Bay Baits",
+        coords: [30.385, -86.205],
+        popup: `<strong>Bay Baits</strong><br>24295 US Hwy 331 S<br>Santa Rosa Beach<br><a href="tel:8502786292">(850) 278-6292</a><br>Best live bait + bay fishing advice`
+      },
+      {
+        name: "Stinky’s Bait Shack",
+        coords: [30.305, -86.172],
+        popup: `<strong>Stinky’s Bait Shack</strong><br>5994 W County Hwy 30A<br>Dune Allen Beach<br><a href="tel:8506222248">(850) 622-BAIT</a><br>Live bait + 30A vibe`
+      }
+    ];
+
+    shops.forEach(shop => {
+      L.marker(shop.coords, { icon: shopIcon })
+        .addTo(map)
+        .bindPopup(shop.popup);
+    });
+
+    // Popular Fishing Spots
+    const spots = [
+      {
+        name: "Hogtown Bayou",
+        coords: [30.382, -86.198],
+        type: "Inshore",
+        popup: `<strong>Hogtown Bayou</strong><br>Top inshore spot. Reds, trout, flounder.<br>Cessna Landing boat ramp &amp; shore access.`
+      },
+      {
+        name: "Western Lake",
+        coords: [30.325, -86.152],
+        type: "Dune Lake",
+        popup: `<strong>Western Lake (Grayton)</strong><br>Brackish lake with bass + occasional reds/trout.<br>Access via Grayton Beach State Park.`
+      },
+      {
+        name: "Seagrove Beach Surf",
+        coords: [30.318, -86.128],
+        type: "Surf",
+        popup: `<strong>Seagrove Beach</strong><br>Main surf fishing beach for pompano, whiting, reds.`
+      },
+      {
+        name: "Grayton Beach Surf",
+        coords: [30.320, -86.148],
+        type: "Surf",
+        popup: `<strong>Grayton Beach</strong><br>Good surf + lake outfall combo. Popular with locals.`
+      },
+      {
+        name: "Inlet Beach",
+        coords: [30.282, -86.032],
+        type: "Surf",
+        popup: `<strong>Inlet Beach</strong><br>Less crowded east end surf. Good pompano action.`
+      },
+      {
+        name: "Eastern Lake Outflow",
+        coords: [30.306, -86.112],
+        type: "Dune Lake",
+        popup: `<strong>Eastern Lake Outflow</strong><br>Productive lake-to-Gulf connection. Moving tides = good fishing.`
+      },
+      {
+        name: "Choctawhatchee Bay Flats",
+        coords: [30.405, -86.215],
+        type: "Bay",
+        popup: `<strong>Choctawhatchee Bay Flats</strong><br>Big grass flats north of 30A. Excellent sight fishing for reds.`
+      },
+      {
+        name: "Topsail Hill Preserve",
+        coords: [30.355, -86.245],
+        type: "Surf",
+        popup: `<strong>Topsail Hill Preserve</strong><br>More remote beach with less pressure. Good surf option.`
+      }
+    ];
+
+    spots.forEach(spot => {
+      L.marker(spot.coords, { icon: spotIcon })
+        .addTo(map)
+        .bindPopup(spot.popup);
+    });
+
+    // Optional: Add a subtle note layer
+    setTimeout(() => {
+      map.invalidateSize();
+    }, 300);
+  </script>
+
+  <!-- Dashboard Modal Controls -->
+  <script>
+    let isFullscreen = false;
+
+    function openDashboard() {
+      const modal = document.getElementById('dashboard-modal');
+      modal.classList.add('active');
+      modal.style.display = 'flex';
+    }
+
+    function closeDashboard() {
+      const modal = document.getElementById('dashboard-modal');
+      modal.classList.remove('active');
+      modal.style.display = 'none';
+      // Exit fullscreen if active
+      if (isFullscreen) {
+        modal.classList.remove('fullscreen');
+        isFullscreen = false;
+      }
+    }
+
+    function toggleFullscreen() {
+      const modal = document.getElementById('dashboard-modal');
+      isFullscreen = !isFullscreen;
+      modal.classList.toggle('fullscreen', isFullscreen);
+    }
+
+    // Close on Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        const modal = document.getElementById('dashboard-modal');
+        if (modal.classList.contains('active')) {
+          closeDashboard();
+        }
+      }
+    });
+
+    // Optional: Open dashboard automatically on first visit (commented out)
+    // setTimeout(() => { if (!localStorage.getItem('dashboardSeen')) openDashboard(); }, 2200);
+  </script>
+
+</body>
+</html>
