@@ -566,18 +566,18 @@
       <div class="summary-grid">
         <div class="summary-card">
           <div class="label">Current Window</div>
-          <div class="value">Today – Next Friday</div>
-          <div style="font-size:0.85rem; color:#64748b; margin-top:4px;">Early June 2026</div>
+          <div class="value">Next 7 Days</div>
+          <div style="font-size:0.85rem; color:#64748b; margin-top:4px;"><span id="season-label"></span></div>
         </div>
         <div class="summary-card">
           <div class="label">Water Temp</div>
-          <div class="value">~80–82°F</div>
-          <div style="font-size:0.85rem; color:#64748b;">Gulf of Mexico</div>
+          <div class="value" id="water-temp-seasonal">—</div>
+          <div style="font-size:0.85rem; color:#64748b;">Typical seasonal range, not live</div>
         </div>
         <div class="summary-card">
           <div class="label">Best Bite Outlook</div>
-          <div class="value" style="color:#67e8f9;">Good to Very Good</div>
-          <div style="font-size:0.85rem; color:#64748b;">Near full moon period</div>
+          <div class="value" style="color:#67e8f9;"><span id="outlook-summary">Loading…</span></div>
+          <div style="font-size:0.85rem; color:#64748b;">Check moon phase / solunar tables</div>
         </div>
         <div class="summary-card">
           <div class="label">Primary Species</div>
@@ -601,97 +601,29 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td><span class="day-name">Today (Sun)</span><br><span style="font-size:0.8rem;color:#64748b;">Jun 1</span></td>
-            <td class="conditions">86° / 76°<br>Partly sunny, 20% PM storms<br>SW 10-15 mph</td>
-            <td>1-2 ft wind chop<br>Short period, poor-fair<br>SW onshore</td>
-            <td>
-              <span class="best-time">Major: 11:50am–1:50pm</span><br>
-              <span style="font-size:0.85rem">Minor: 4:30–6:30am &amp; 7:20–9:20pm</span>
-            </td>
-            <td><span class="badge badge-green">Good</span><br><span style="font-size:0.8rem">Full moon influence</span></td>
-          </tr>
-          <tr>
-            <td><span class="day-name">Mon</span><br><span style="font-size:0.8rem;color:#64748b;">Jun 2</span></td>
-            <td class="conditions">86° / 75°<br>Scattered storms likely (40%)<br>W/SW 10-15</td>
-            <td>1-2 ft chop<br>Still small, bumpy<br>Sea breeze</td>
-            <td>
-              <span class="best-time">Major: 12:45–2:45pm</span><br>
-              <span style="font-size:0.85rem">Minor: 5:20–7:20am &amp; 8:15–10:15pm</span>
-            </td>
-            <td><span class="badge badge-yellow">Fair-Good</span><br><span style="font-size:0.8rem">Afternoon storms</span></td>
-          </tr>
-          <tr>
-            <td><span class="day-name">Tue</span><br><span style="font-size:0.8rem;color:#64748b;">Jun 3</span></td>
-            <td class="conditions">86° / 74°<br>Scattered storms (40%)<br>WNW shifting</td>
-            <td>1-2 ft<br>Improving shape possible<br>before afternoon wind</td>
-            <td>
-              <span class="best-time">Major: 1:35–3:35pm</span><br>
-              <span style="font-size:0.85rem">Minor: 6:10–8:10am &amp; 9:00–11:00pm</span>
-            </td>
-            <td><span class="badge badge-yellow">Fair-Good</span></td>
-          </tr>
-          <tr>
-            <td><span class="day-name">Wed</span><br><span style="font-size:0.8rem;color:#64748b;">Jun 4</span></td>
-            <td class="conditions">84° / 71°<br>Mostly sunny, drier<br>10-20% chance</td>
-            <td>2-3 ft possible<br>E/NE winds building<br>Better structure</td>
-            <td>
-              <span class="best-time">Major: 2:25–4:25pm</span><br>
-              <span style="font-size:0.85rem">Minor: 7:05–9:05am &amp; 9:45–11:45pm</span>
-            </td>
-            <td><span class="badge badge-green">Good</span><br><span style="font-size:0.8rem">Drier = better</span></td>
-          </tr>
-          <tr>
-            <td><span class="day-name">Thu</span><br><span style="font-size:0.8rem;color:#64748b;">Jun 5</span></td>
-            <td class="conditions">83° / 72°<br>Mostly sunny<br>Low storm chance</td>
-            <td>2-4 ft (best of week)<br>E/SE 10-18 kt<br>Watch for cleaner faces</td>
-            <td>
-              <span class="best-time">Major: 3:10–5:10pm</span><br>
-              <span style="font-size:0.85rem">Minor: 8:00–10:00am &amp; 10:20pm–12:20am</span>
-            </td>
-            <td><span class="badge badge-green">Best Day</span></td>
-          </tr>
-          <tr>
-            <td><span class="day-name">Fri</span><br><span style="font-size:0.8rem;color:#64748b;">Jun 6</span></td>
-            <td class="conditions">83° / 73°<br>Partly cloudy<br>20-30% storms</td>
-            <td>2-3 ft<br>SE winds<br>Still fishable</td>
-            <td>
-              <span class="best-time">Major: 3:55–5:55pm</span><br>
-              <span style="font-size:0.85rem">Minor: 9:00–11:00am &amp; 10:55pm–12:55am</span>
-            </td>
-            <td><span class="badge badge-yellow">Good</span></td>
-          </tr>
-          <tr>
-            <td><span class="day-name">Next Sat</span><br><span style="font-size:0.8rem;color:#64748b;">Jun 7</span></td>
-            <td class="conditions">84° / 74°<br>Increasing storms<br>30-50%</td>
-            <td>2-3 ft<br>SE/S winds<br>Choppy later</td>
-            <td>
-              <span class="best-time">Major: ~4:40–6:40pm</span><br>
-              <span style="font-size:0.85rem">Minor: 9:50–11:50am &amp; late night</span>
-            </td>
-            <td><span class="badge badge-yellow">Fair</span></td>
-          </tr>
+          <tr><td colspan="5" style="text-align:center;color:#64748b;">Loading live forecast…</td></tr>
         </tbody>
       </table>
       
       <div style="margin-top:0.75rem; font-size:0.8rem; color:#64748b;">
-        Surf data synthesized from Surfline (Grayton/Inlet Beach) + NOAA marine forecasts. Conditions change fast — always check live reports.
+        Forecast data from Open-Meteo (weather + marine). Conditions change fast — always check live reports.
       </div>
     </div>
 
     <!-- Top Windows -->
     <div class="section">
-      <h2 class="section-title">This Week’s Best Fishing Windows</h2>
+      <h2 class="section-title">Best Fishing Windows</h2>
       <div class="card">
-        <p><strong>Top recommendations (combine these with moving tides):</strong></p>
+        <p id="best-windows-live"><strong>Best upcoming days:</strong> <span id="best-windows-days">Loading live forecast…</span></p>
+        <p style="margin-top:0.6rem;"><strong>General tips (any time of year):</strong></p>
         <ul style="margin-top:0.6rem; padding-left:1.1rem; color:#cbd5e1;">
-          <li><strong>Wednesday–Thursday</strong> — Best overall window (drier air, building surf, good structure)</li>
-          <li><strong>Early mornings</strong> (first 2–3 hours after sunrise) — especially Tue–Fri</li>
-          <li><strong>Late afternoon majors</strong> (2–6pm range) — overlap with incoming/outgoing tides</li>
-          <li><strong>Full moon influence</strong> (through early week) — stronger nighttime and twilight feeding</li>
+          <li><strong>Moving tides</strong> — fish the 2 hours on either side of high or low tide</li>
+          <li><strong>Early mornings</strong> — the first 2–3 hours after sunrise are often most productive</li>
+          <li><strong>Late afternoons into dusk</strong> — another prime low-light feeding period</li>
+          <li><strong>Low light &amp; overcast</strong> — redfish and trout feed more confidently with less glare</li>
         </ul>
-        <p style="margin-top:0.8rem; font-size:0.9rem;">Focus on <strong>moving water</strong> (2 hours on either side of high or low) + low light periods for redfish and trout.</p>
-      </div>
+        <p style="margin-top:0.8rem; font-size:0.9rem;">Check tide and solunar tables (see Tides4Fishing / FishingReminder links below) for exact major/minor periods.</p>
+</div>
     </div>
 
     <!-- Interactive Map -->
@@ -923,7 +855,7 @@
     </div>
 
     <div style="font-size:0.82rem; color:#64748b; background:#0a111f; padding:1rem 1.15rem; border-radius:14px; border-left:4px solid #14b8a6; line-height:1.5;">
-      <strong>Important:</strong> Always verify current tides, surf, and weather before heading out. Get a Florida fishing license (available at all local shops). Follow FWC slot limits for redfish (18–27"). Summer heat is serious — fish early or late and stay hydrated. Data compiled from Surfline, NOAA, local reports, and FishingReminder.
+      <strong>Important:</strong> Always verify current tides, surf, and weather before heading out. Get a Florida fishing license (available at all local shops). Follow FWC slot limits for redfish (18–27"). Heat can be serious in warmer months — fish early or late and stay hydrated. Forecast from Open-Meteo; see Surfline, NOAA, local shops, and FishingReminder for more.
     </div>
 
   </div>
@@ -944,23 +876,23 @@
         <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(170px,1fr)); gap:0.85rem; margin-bottom:1.25rem;">
           <div class="dash-card">
             <div class="dash-label">Today</div>
-            <div class="dash-value" style="font-size:1.9rem;">86° / 76°</div>
-            <div style="color:#64748b; font-size:0.85rem;">Partly sunny • 20% PM storms</div>
+            <div class="dash-value" style="font-size:1.9rem;" id="dash-today-temp">…</div>
+            <div style="color:#64748b; font-size:0.85rem;" id="dash-today-cond">Live forecast loading…</div>
           </div>
           <div class="dash-card">
             <div class="dash-label">Surf</div>
-            <div class="dash-value">1–2 ft</div>
-            <div style="color:#64748b; font-size:0.85rem;">Short period wind chop • SW onshore</div>
+            <div class="dash-value" id="dash-today-surf">…</div>
+            <div style="color:#64748b; font-size:0.85rem;" id="dash-today-wind">Live forecast loading…</div>
           </div>
           <div class="dash-card">
             <div class="dash-label">Best Bite Window</div>
-            <div class="dash-value" style="color:#14b8a6;">11:50am – 1:50pm</div>
-            <div style="color:#64748b; font-size:0.85rem;">Major period + moving tide</div>
+            <div class="dash-value" style="color:#14b8a6; font-size:1.2rem;">Dawn &amp; dusk</div>
+            <div style="color:#64748b; font-size:0.85rem;">Check solunar tables + moving tide</div>
           </div>
           <div class="dash-card">
             <div class="dash-label">Recommendation</div>
-            <div class="dash-value" style="font-size:1.35rem; line-height:1.2;">Fish Hogtown Bayou<br>or Western Lake</div>
-            <div style="color:#22c55e; font-size:0.85rem; margin-top:4px;">Good conditions expected</div>
+            <div class="dash-value" style="font-size:1.35rem; line-height:1.2;">Windy? Try Hogtown Bayou<br>or Western Lake</div>
+            <div style="color:#64748b; font-size:0.85rem; margin-top:4px;" id="dash-today-rating">Rating loading…</div>
           </div>
         </div>
 
@@ -975,45 +907,38 @@
         </div>
 
         <div style="font-size:0.85rem; color:#64748b; background:#0a111f; padding:0.9rem 1.1rem; border-radius:12px; border-left:4px solid #14b8a6;">
-          <strong>Pro tip for today:</strong> Focus on the late morning major. Wind is manageable early. Western Lake or Hogtown Bayou should be more protected than the open Gulf surf.
+          <strong>Pro tip:</strong> <span id="pro-tip">Fish moving water during low-light periods for the best inshore bite.</span>
         </div>
 
-        <!-- Best Day This Week -->
+        <!-- Best Day (live) -->
         <div style="margin-top:1.4rem;">
-          <div style="font-size:0.78rem; color:#64748b; margin-bottom:8px; text-transform:uppercase; letter-spacing:0.5px; font-weight:600;">⭐ Best Day to Fish This Week</div>
+          <div style="font-size:0.78rem; color:#64748b; margin-bottom:8px; text-transform:uppercase; letter-spacing:0.5px; font-weight:600;">⭐ Best Day to Fish (Next 7 Days)</div>
           <div class="dash-card" style="background:#0a111f; border-color:#14b8a6;">
             <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
               <div>
-                <div style="font-size:1.35rem; font-weight:700; color:#f1f5f9;">Thursday, June 5</div>
-                <div style="color:#64748b; font-size:0.9rem;">2–4 ft surf • Lower storm chance • E/SE winds</div>
+                <div style="font-size:1.35rem; font-weight:700; color:#f1f5f9;"><span id="best-day-date">Loading…</span></div>
+                <div id="best-day-detail" style="color:#64748b; font-size:0.9rem;">Live forecast loading…</div>
               </div>
               <div style="text-align:right;">
                 <div style="background:#166534; color:#86efac; font-size:0.75rem; padding:3px 10px; border-radius:9999px; display:inline-block; font-weight:600;">BEST OVERALL</div>
-                <div style="font-size:0.85rem; color:#22c55e; margin-top:4px;">Strong afternoon major + cleaner faces</div>
+                <div style="font-size:0.85rem; color:#22c55e; margin-top:4px;">Estimate from wind + waves</div>
               </div>
             </div>
             <div style="margin-top:10px; font-size:0.85rem; color:#cbd5e1;">
-              Best combo of conditions: Drier air, building surf for structure fishing, and a solid 3:10–5:10pm major period. Great day for both surf (pompano) and inshore (reds/trout).
+              Best day is picked automatically from the live Open-Meteo wind and wave forecast (lowest wind/waves). Estimate only — check solunar tables and local reports.
             </div>
           </div>
         </div>
 
-        <!-- Recent Fishing Reports -->
+        <!-- Local Reports -->
         <div style="margin-top:1.25rem;">
-          <div style="font-size:0.78rem; color:#64748b; margin-bottom:8px; text-transform:uppercase; letter-spacing:0.5px; font-weight:600;">📣 Recent Local Reports (Emerald Coast / 30A)</div>
-          <div style="display:grid; gap:0.6rem;">
-            <div style="background:#0a111f; border:1px solid var(--border); border-radius:10px; padding:0.7rem 0.9rem; font-size:0.88rem;">
-              <strong style="color:#5eead4;">Inshore / Hogtown Bayou:</strong> Redfish biting well on gold spoons and Gulp shrimp along grass edges and oyster bars. Early morning and moving tides best. Some solid slot reds reported.
-            </div>
-            <div style="background:#0a111f; border:1px solid var(--border); border-radius:10px; padding:0.7rem 0.9rem; font-size:0.88rem;">
-              <strong style="color:#5eead4;">Speckled Trout:</strong> Good early topwater action on the flats before boat traffic builds. Live shrimp under popping corks also producing in 4–7 ft depths.
-            </div>
-            <div style="background:#0a111f; border:1px solid var(--border); border-radius:10px; padding:0.7rem 0.9rem; font-size:0.88rem;">
-              <strong style="color:#5eead4;">Surf (Seagrove / Grayton):</strong> Pompano and whiting starting to show in the troughs near sandbars. Best when weeds clear. Sand fleas and fresh shrimp working.
-            </div>
-            <div style="background:#0a111f; border:1px solid var(--border); border-radius:10px; padding:0.7rem 0.9rem; font-size:0.88rem;">
-              <strong style="color:#5eead4;">General Note:</strong> Full moon influence still helping twilight and nighttime bites. Local shops (Yellowfin &amp; Bay Baits) reporting steady inshore action this week.
-            </div>
+          <div style="font-size:0.78rem; color:#64748b; margin-bottom:8px; text-transform:uppercase; letter-spacing:0.5px; font-weight:600;">📣 Local Fishing Reports (Emerald Coast / 30A)</div>
+          <div style="background:#0a111f; border:1px solid var(--border); border-radius:10px; padding:0.7rem 0.9rem; font-size:0.88rem;">
+            Check these shops for current reports:
+            <a href="https://www.yellowfinoceansports.com/" target="_blank" style="color:#67e8f9;">Yellowfin Ocean Sports</a> ·
+            <a href="https://www.baybaits.com/" target="_blank" style="color:#67e8f9;">Bay Baits</a> ·
+            <a href="https://stinkysbaitshop.com/" target="_blank" style="color:#67e8f9;">Stinky's Bait Shop</a> ·
+            <a href="https://www.fishingreminder.com/fishing-spots/us/florida/seagrove-beach-4172351" target="_blank" style="color:#67e8f9;">FishingReminder</a>
           </div>
         </div>
       </div>
@@ -1182,5 +1107,95 @@
     // setTimeout(() => { if (!localStorage.getItem('dashboardSeen')) openDashboard(); }, 2200);
   </script>
 
+
+  <!-- Live forecast (Open-Meteo, no key) -->
+  <script>
+  (function(){
+    var WX='https://api.open-meteo.com/v1/forecast?latitude=30.3155&longitude=-86.1172&daily=temperature_2m_max,temperature_2m_min,weather_code,wind_speed_10m_max,wind_direction_10m_dominant,precipitation_probability_max&temperature_unit=fahrenheit&wind_speed_unit=mph&timezone=America%2FChicago';
+    var MR='https://marine-api.open-meteo.com/v1/marine?latitude=30.30&longitude=-86.12&daily=wave_height_max,wave_period_max&length_unit=imperial&timezone=America%2FChicago';
+    var M=['January','February','March','April','May','June','July','August','September','October','November','December'];
+    var MS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var DS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], DL=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    // Rough seasonal Gulf water temps (typical ranges, not live data)
+    var WT=['~58–62°F','~58–62°F','~62–66°F','~68–72°F','~75–79°F','~80–84°F','~84–86°F','~85–87°F','~82–85°F','~74–79°F','~66–70°F','~60–64°F'];
+    var now=new Date(), m=now.getMonth(), d=now.getDate();
+    var season=[11,0,1].indexOf(m)>=0?'Winter':m<=4?'Spring':m<=7?'Summer':'Fall';
+    document.getElementById('season-label').textContent=(d<=10?'Early ':d<=20?'Mid ':'Late ')+M[m]+' '+now.getFullYear()+' · '+season;
+    document.getElementById('water-temp-seasonal').textContent=WT[m];
+    function wx(c){
+      if(c===0)return'☀️ Clear'; if(c<=2)return'🌤️ Partly cloudy'; if(c===3)return'☁️ Overcast';
+      if(c===45||c===48)return'🌫️ Fog'; if(c>=51&&c<=57)return'🌦️ Drizzle'; if(c>=61&&c<=67)return'🌧️ Rain';
+      if(c>=71&&c<=77)return'🌨️ Snow'; if(c>=80&&c<=82)return'🌦️ Showers'; if(c===85||c===86)return'🌨️ Snow showers';
+      if(c>=95)return'⛈️ Thunderstorms'; return'Code '+c;
+    }
+    function dir(deg){return ['N','NE','E','SE','S','SW','W','NW'][Math.round(deg/45)%8];}
+    function rate(w,h){
+      if(w==null||h==null)return{t:'n/a',c:'badge-yellow',s:9};
+      if(w<12&&h<2)return{t:'Good',c:'badge-green',s:0};
+      if(w<18&&h<3.5)return{t:'Fair',c:'badge-yellow',s:1};
+      return{t:'Poor',c:'badge-red',s:2};
+    }
+    function esc(s){return String(s).replace(/[&<>]/g,function(x){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[x];});}
+    var tbody=document.querySelector('.forecast-table tbody');
+    var note=document.createElement('div');
+    note.id='forecast-updated'; note.style.cssText='margin-top:0.5rem;font-size:0.8rem;color:#64748b;';
+    tbody.closest('table').insertAdjacentElement('afterend',note);
+    function fail(){
+      tbody.innerHTML='<tr><td colspan="5" style="text-align:center;color:#f87171;font-weight:600;">⚠️ Live forecast unavailable — please check NOAA or Surfline directly.</td></tr>';
+      note.innerHTML='Source: <a href="https://open-meteo.com" target="_blank" rel="noopener" style="color:#5eead4;">Open-Meteo</a> (request failed)';
+      document.getElementById('outlook-summary').textContent='Unavailable';
+      document.getElementById('best-day-date').textContent='Live forecast unavailable';
+      document.getElementById('best-day-detail').textContent='';
+      setT('best-windows-days','Live forecast unavailable — check NOAA or Surfline.');
+      ['dash-today-temp','dash-today-surf'].forEach(function(x){setT(x,'n/a');});
+      ['dash-today-cond','dash-today-wind','dash-today-rating'].forEach(function(x){setT(x,'Forecast unavailable');});
+    }
+    var TIPS=['Fish moving water during low-light periods for the best inshore bite.',
+      'On windy days, protected water like Western Lake or Hogtown Bayou fishes better than the open Gulf.',
+      'Work grass edges and oyster bars on a moving tide for redfish.',
+      'Topwater early, then switch to soft plastics or live shrimp as the sun gets higher.',
+      'In the surf, look for troughs and cuts between sandbars — fish hold there.',
+      'Match your bait to what is in the water; ask the local shop what is working.',
+      'Stay stealthy on the flats — long casts and quiet approaches catch more fish.'];
+    var tipEl=document.getElementById('pro-tip'); if(tipEl)tipEl.textContent=TIPS[now.getDay()%TIPS.length];
+    function setT(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
+    function j(u){return fetch(u).then(function(r){if(!r.ok)throw new Error(r.status);return r.json();});}
+    Promise.all([j(WX),j(MR).catch(function(){return null;})]).then(function(res){
+      var a=res[0].daily, mr=res[1]&&res[1].daily;
+      if(!a||!a.time||!a.time.length)throw new Error('no data');
+      var rows=[], best=null, all=[], counts={Good:0,Fair:0,Poor:0};
+      a.time.forEach(function(t,i){
+        var p=t.split('-'), dt=new Date(+p[0],p[1]-1,+p[2]);
+        var name=i===0?'Today ('+DS[dt.getDay()]+')':i===1?'Tomorrow ('+DS[dt.getDay()]+')':DS[dt.getDay()];
+        var w=a.wind_speed_10m_max[i], h=mr&&mr.wave_height_max?mr.wave_height_max[i]:null, per=mr&&mr.wave_period_max?mr.wave_period_max[i]:null;
+        var r=rate(w,h); if(counts[r.t]!=null)counts[r.t]++;
+        all.push({dt:dt,r:r,k:r.s*1000+w+(h||0)*4});
+        if(!best||r.s<best.r.s||(r.s===best.r.s&&(w+(h||0)*4)<(best.w+(best.h||0)*4)))best={i:i,dt:dt,r:r,w:w,h:h,dir:dir(a.wind_direction_10m_dominant[i])};
+        rows.push('<tr>'+
+          '<td><span class="day-name">'+name+'</span><br><span style="font-size:0.8rem;color:#64748b;">'+MS[dt.getMonth()]+' '+dt.getDate()+'</span></td>'+
+          '<td class="conditions">'+Math.round(a.temperature_2m_max[i])+'° / '+Math.round(a.temperature_2m_min[i])+'°<br>'+esc(wx(a.weather_code[i]))+'<br>'+a.precipitation_probability_max[i]+'% rain chance</td>'+
+          '<td>'+(h!=null?h.toFixed(1)+' ft max waves':'Waves n/a')+'<br>'+(per!=null?per.toFixed(1)+' s period':'')+'<br>'+dir(a.wind_direction_10m_dominant[i])+' '+Math.round(w)+' mph max</td>'+
+          '<td><span style="font-size:0.85rem;color:#64748b;">Check solunar tables for major/minor times</span></td>'+
+          '<td><span class="badge '+r.c+'">'+r.t+'</span><br><span style="font-size:0.8rem">Estimate (wind + waves)</span></td>'+
+        '</tr>');
+      });
+      tbody.innerHTML=rows.join('');
+      var t=new Date();
+      note.innerHTML='Forecast updated '+t.toLocaleString([], {weekday:'short',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})+' · Source: <a href="https://open-meteo.com" target="_blank" rel="noopener" style="color:#5eead4;">Open-Meteo</a> · Ratings are estimates (Good: wind &lt;12 mph &amp; waves &lt;2 ft; Fair: wind &lt;18 &amp; waves &lt;3.5 ft)';
+      document.getElementById('outlook-summary').textContent=counts.Good+' Good · '+counts.Fair+' Fair · '+counts.Poor+' Poor';
+      document.getElementById('best-day-date').textContent=DL[best.dt.getDay()]+', '+M[best.dt.getMonth()]+' '+best.dt.getDate();
+      document.getElementById('best-day-detail').textContent=(best.h!=null?best.h.toFixed(1)+' ft waves • ':'')+best.dir+' '+Math.round(best.w)+' mph • '+best.r.t+' (estimate)';
+      all.sort(function(x,y){return x.k-y.k;});
+      var top=all.filter(function(x){return x.r.s<2;}).slice(0,2);
+      setT('best-windows-days',top.length?top.map(function(x){return DL[x.dt.getDay()]+' '+MS[x.dt.getMonth()]+' '+x.dt.getDate()+' ('+x.r.t+')';}).join(' and ')+' — lightest wind and waves in the 7-day forecast (estimate).':'No Good/Fair days in the 7-day forecast — consider protected bays or wait it out.');
+      var r0=rate(a.wind_speed_10m_max[0],mr&&mr.wave_height_max?mr.wave_height_max[0]:null), h0=mr&&mr.wave_height_max?mr.wave_height_max[0]:null;
+      setT('dash-today-temp',Math.round(a.temperature_2m_max[0])+'° / '+Math.round(a.temperature_2m_min[0])+'°');
+      setT('dash-today-cond',wx(a.weather_code[0])+' • '+a.precipitation_probability_max[0]+'% rain');
+      setT('dash-today-surf',h0!=null?h0.toFixed(1)+' ft':'n/a');
+      setT('dash-today-wind',dir(a.wind_direction_10m_dominant[0])+' '+Math.round(a.wind_speed_10m_max[0])+' mph max');
+      setT('dash-today-rating','Today: '+r0.t+' (estimate)');
+    }).catch(fail);
+  })();
+  </script>
 </body>
 </html>
